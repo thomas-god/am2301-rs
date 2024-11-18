@@ -40,7 +40,7 @@ fn skip_start_of_measure(pin: &mut Flex<'_>) {
 }
 
 pub enum ReadBitsError {
-    TimeoutErr
+    TimeoutErr,
 }
 
 pub fn read_bits(pin: &mut Flex<'_>) -> Result<[u8; 40], ReadBitsError> {
