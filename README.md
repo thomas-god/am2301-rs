@@ -1,3 +1,5 @@
+![Crates.io Version](https://img.shields.io/crates/v/am2301)
+
 # am2301-rs
 
 A crate to interface with an AM2301 humidity and temperature sensor using a
