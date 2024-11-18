@@ -2,6 +2,11 @@
 name = "am2301"
 version = "0.1.0"
 edition = "2021"
+license = "MIT"
+description = "A crate to interface with an AM2301 humidity and temperature sensor."
+repository = "https://github.com/thomas-god/am2301-rs"
+keywords = ["am2301", "rp2040", "embedded"]
+categories = ["embedded", "hardware-support", "no-std"]
 
 [dependencies]
 defmt = "0.3"
