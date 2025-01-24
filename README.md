@@ -1,4 +1,4 @@
-![Crates.io Version](https://img.shields.io/crates/v/am2301)
+[![Crates.io Version](https://img.shields.io/crates/v/am2301)](https://crates.io/crates/am2301)
 
 # am2301-rs
 
