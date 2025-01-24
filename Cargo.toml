@@ -1,6 +1,6 @@
 [package]
 name = "am2301"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 license = "MIT"
 description = "A crate to interface with an AM2301 humidity and temperature sensor."

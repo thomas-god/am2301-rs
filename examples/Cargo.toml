@@ -5,7 +5,7 @@ edition = "2021"
 license = "MIT"
 
 [dependencies]
-am2301 = {version = "0.1.0", path = "../../am2301-rs"}
+am2301 = {version = "0.2.0", path = "../../am2301-rs"}
 
 defmt = "0.3"
 defmt-rtt = "0.4"

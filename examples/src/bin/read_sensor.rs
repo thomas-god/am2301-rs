@@ -3,12 +3,12 @@
 
 use defmt::*;
 
-use am2301::measure_once;
+use am2301::{measure_once_timeout, Measure};
 
+use embassy_executor::Spawner;
 use embassy_rp::gpio::Flex;
 use embassy_rp::peripherals::PIN_21;
 use embassy_time::{Instant, Timer};
-use embassy_executor::Spawner;
 
 use {defmt_rtt as _, panic_probe as _};
 
@@ -21,8 +21,11 @@ pub async fn measure_task(pin: PIN_21) -> ! {
 
     loop {
         let start = Instant::now();
-        match measure_once(&mut pin).await {
-            Ok((humidity, temperature)) => {
+        match measure_once_timeout(&mut pin).await {
+            Ok(Measure {
+                humidity,
+                temperature,
+            }) => {
                 info!("Temperature = {} and humidity = {}", temperature, humidity);
             }
             Err(err) => {

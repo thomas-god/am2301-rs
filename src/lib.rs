@@ -26,7 +26,7 @@ fn process_response(bits: [u8; 40]) -> Result<(f64, f64), ProcessResponseError> 
 
     let checksum_left = [byte1, byte2, byte3, byte4]
         .iter()
-        .map(|byte| convert_byte_to_u8(&byte))
+        .map(convert_byte_to_u8)
         .fold(0u8, |acc, x| acc.wrapping_add(x));
     let checksum_right = convert_byte_to_u8(&byte5);
 
@@ -59,15 +59,19 @@ fn process_response(bits: [u8; 40]) -> Result<(f64, f64), ProcessResponseError> 
 fn convert_byte_to_u8(byte: &[u8; 8]) -> u8 {
     let mut value = 0;
     for (idx, &bit) in byte.iter().rev().enumerate() {
-        value += bit as u8 * 2u8.pow(idx as u32);
+        value += bit * 2u8.pow(idx as u32);
     }
     value
 }
 
 #[derive(Format)]
+/// Possible ways a measure can fail.
 pub enum MeasureError {
+    /// A timeout occured during the measure.
     MeasureTimeoutError,
+    /// The checksum of the measure does not match its content.
     ChecksumError,
+    /// Invalid measure.
     MeasureError,
 }
 
@@ -86,10 +90,33 @@ impl From<ReadBitsError> for MeasureError {
     }
 }
 
+#[deprecated(
+    since = "0.2.0",
+    note = "Has not timeout, could block forever. Use measure_once_timeout instead."
+)]
 pub async fn measure_once(pin: &mut Flex<'_>) -> Result<(f64, f64), MeasureError> {
     let bits = measure::read_bits(pin)?;
     let (humidity, temperature) = process_response(bits)?;
     Ok((humidity, temperature))
+}
+
+pub struct Measure {
+    /// Humidity in % between \[0, 100\].
+    pub humidity: f64,
+    /// Temperature in degree Celsius.
+    pub temperature: f64,
+}
+
+/// Retrieve a single measure from the sensor connected in pin.
+/// Will timeout if no matching sensor is connected to the pin.
+pub async fn measure_once_timeout(pin: &mut Flex<'_>) -> Result<Measure, MeasureError> {
+    let bits = measure::read_bits_timeout(pin)?;
+    process_response(bits)
+        .map(|(humidity, temperature)| Measure {
+            humidity,
+            temperature,
+        })
+        .map_err(MeasureError::from)
 }
 
 #[cfg(test)]
